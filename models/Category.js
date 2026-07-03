@@ -1,5 +1,5 @@
+const sequelize = require('../config/db'); // <--- PASTIKAN ADA JALUR JALAN KEMBAR (../)
 const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/db');
 
 const Category = sequelize.define('Category', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
