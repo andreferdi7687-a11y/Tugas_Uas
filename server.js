@@ -1,4 +1,4 @@
-require("dotenv").config();
+const sequelize = require('./config/db');
 
 const path = require("path");
 const http = require("http");
