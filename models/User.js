@@ -1,11 +1,6 @@
 const sequelize = require('../config/db'); 
-const { DataTypes } = require('sequelize'); // Kalau kawanmu pakai DataTypes
-
-const User = sequelize.define('User', {
-  // ... isi model User kawanmu ...
-});
-
-module.exports = User;
+const { DataTypes } = require('sequelize'); 
+const bcrypt = require('bcryptjs'); 
 
 const User = sequelize.define('User', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
@@ -16,7 +11,7 @@ const User = sequelize.define('User', {
   phone: { type: DataTypes.STRING, defaultValue: '' },
   address: { type: DataTypes.STRING, defaultValue: '' },
   avatar: { type: DataTypes.STRING, defaultValue: '/img/default-avatar.png' },
-  storeName: { type: DataTypes.STRING, defaultValue: '' }, // hanya dipakai jika role = seller
+  storeName: { type: DataTypes.STRING, defaultValue: '' },
   isActive: { type: DataTypes.BOOLEAN, defaultValue: true }
 }, {
   tableName: 'Users',
@@ -34,7 +29,6 @@ User.prototype.comparePassword = function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-// jangan pernah kirim password ke view/JSON
 User.prototype.toSafeJSON = function () {
   const { id, name, email, role, phone, address, avatar, storeName, isActive, createdAt } = this;
   return { id, name, email, role, phone, address, avatar, storeName, isActive, createdAt };
