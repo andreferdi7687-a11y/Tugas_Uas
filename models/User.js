@@ -1,6 +1,11 @@
-const { DataTypes } = require('sequelize');
-const bcrypt = require('bcryptjs');
-const { sequelize } = require('../config/db');
+const sequelize = require('../config/db'); 
+const { DataTypes } = require('sequelize'); // Kalau kawanmu pakai DataTypes
+
+const User = sequelize.define('User', {
+  // ... isi model User kawanmu ...
+});
+
+module.exports = User;
 
 const User = sequelize.define('User', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
