@@ -1,4 +1,4 @@
-const sequelize = require('./config/db');
+const sequelize = require('./config/db'); // <--- CUKUP SATU SAJA DI PALING ATAS, AMAN LEK!
 
 const path = require("path");
 const http = require("http");
@@ -11,7 +11,7 @@ const expressLayouts = require("express-ejs-layouts");
 const methodOverride = require("method-override");
 const { Server } = require("socket.io");
 
-const { sequelize } = require("./config/db");
+// BARIS DI BAWAH INI SUDAH AWAK BERSIHKAN DARI DEKLARASI SEQUELIZE GANDA
 const { attachUserToLocals } = require("./middleware/auth");
 const { notFound, errorHandler } = require("./middleware/errorHandler");
 const requestLogger = require("./middleware/logger");
@@ -95,10 +95,10 @@ const PORT = process.env.PORT || 3000;
 async function ensureOrderItemsSellerId() {
   const qi = sequelize.getQueryInterface();
   const tables = await qi.showAllTables();
-  if (!tables.includes("OrderItems")) return; // tabel belum ada -> sync akan buat dari awal, sudah benar
+  if (!tables.includes("OrderItems")) return; 
 
   const columns = await qi.describeTable("OrderItems");
-  if (columns.sellerId) return; // kolom sudah ada, tidak perlu perbaikan
+  if (columns.sellerId) return; 
 
   console.log("🔧 Kolom OrderItems.sellerId tidak ditemukan (skema lama). Memperbaiki otomatis...");
 
@@ -136,15 +136,11 @@ sequelize
     return ensureOrderItemsSellerId();
   })
   .then(() => {
-    // alter:true supaya Sequelize otomatis menambahkan kolom/relasi baru
-    // ke tabel yang sudah lebih dulu ada di database, bukan cuma membuat
-    // tabel yang benar-benar baru.
     return sequelize.sync({ alter: true });
   })
   .then(async () => {
     console.log("Database Synced");
 
-    // Cek apakah tabel produk masih kosong (biasanya berarti belum di-seed)
     const totalProducts = await Product.count().catch(() => 0);
     if (totalProducts === 0) {
       console.log("  Database masih kosong (belum ada data produk).");
